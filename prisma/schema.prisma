@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  likes     Like[]
+  cateItems CartItem[]
+  orders    Order[]
+
+  @@map("users")
+}
+
+model Book {
+  id         Int      @id @default(autoincrement())
+  title      String
+  img        Int
+  categoryId Int
+  format     String
+  isbn       Int
+  summary    String   @db.VarChar(255)
+  detail     String   @db.Text
+  author     String
+  pages      Int
+  contents   String
+  price      Int
+  pub_date   DateTime @default(now())
+  totalLikes Int
+
+  likes        Like[]
+  cartItems    CartItem[]
+  orderedBooks OderedBook[]
+  orders       Order[]
+
+  categories Category @relation(fields: [categoryId], references: [id])
+
+  @@map("books")
+}
+
+model Like {
+  userId      Int @id
+  likedBookId Int
+
+  users User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  books Book @relation(fields: [likedBookId], references: [id])
+
+  @@map("likes")
+}
+
+model Category {
+  id           Int    @id @default(autoincrement())
+  categoryName String @unique
+
+  books Book[]
+
+  @@map("categories")
+}
+
+model CartItem {
+  id       Int    @id @default(autoincrement())
+  bookId   Int
+  title    String
+  summary  String
+  quantity Int
+  price    Int
+  userId   Int
+
+  books Book @relation(fields: [bookId], references: [id])
+  users User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cart_iemts")
+}
+
+model Delivery {
+  id       Int    @id @default(autoincrement())
+  address  String
+  receiver String
+  contact  String
+
+  orders Order[]
+
+  @@map("deleveries")
+}
+
+model OderedBook {
+  id       Int @id @default(autoincrement())
+  orderId  Int
+  bookId   Int
+  quantity Int
+
+  orders Order @relation(fields: [orderId], references: [id])
+  books  Book  @relation(fields: [bookId], references: [id])
+
+  @@map("order_books")
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  bookId        Int
+  totalQuantity Int
+  totalPrice    Int
+  userId        Int
+  deliveryId    Int
+  createdAt     DateTime @default(now())
+
+  orderedBooks OderedBook[]
+
+  books      Book     @relation(fields: [bookId], references: [id])
+  users      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries Delivery @relation(fields: [deliveryId], references: [id])
+
+  @@map("orders")
+}

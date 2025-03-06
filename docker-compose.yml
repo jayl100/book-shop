@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: book-shop
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=bookshop1234
+      - MYSQL_DATABASE=book-shop
+      - MYSQL_ROOT_HOST=localhost
+    networks:
+      - mysql_network
+
+  app:
+    build:
+      context: .
+    container_name: book-shop-app
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3000
+      - DATABASE_URL=mysql://root:bookshop1234@localhost:3306/book-shop
+    depends_on:
+      - mysql
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+
+networks:
+  mysql_network:
+    name: mysql_network
+    driver: bridge
+  app_network:
+    driver: bridge

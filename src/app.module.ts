@@ -12,10 +12,30 @@ import { LikeService } from './like/like.service';
 import { LikeModule } from './like/like.module';
 import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [BookModule, CartModule, CategoryModule, LikeModule, OrderModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    BookModule,
+    CartModule,
+    CategoryModule,
+    LikeModule,
+    OrderModule,
+    AuthModule,
+    PrismaModule,
+  ],
   controllers: [AppController, BookController, LikeController],
-  providers: [AppService, PrismaService, BookService, LikeService],
+  providers: [
+    ConfigService,
+    AppService,
+    PrismaService,
+    BookService,
+    LikeService,
+  ],
 })
 export class AppModule {}

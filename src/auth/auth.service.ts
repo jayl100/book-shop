@@ -36,23 +36,49 @@ export class AuthService {
     return user;
   }
 
-  async loginUser(authDto: AuthDto) {
+  async loginUser(authDto: AuthDto): Promise<string> {
     const { email, password } = authDto;
 
     const matchUser = await this.prisma.user.findUnique({
       where: { email },
     });
-
     if (!matchUser) {
       throw new ConflictException('Does not exist');
     }
 
     const comparePassword = await bcrypt.compare(password, matchUser.password);
-
     if (!comparePassword) {
       throw new ConflictException('Login failed');
     }
 
-    return matchUser;
+    const token = this.generateAccessToken(matchUser.id, email);
+    console.log(token);
+
+    return token;
+  }
+
+  passwordResetRequest(email: string) {
+    console.log(email);
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async passwordReset(authDto: AuthDto) {
+    const { email, password } = authDto;
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    return this.prisma.user.update({
+      where: { email },
+      data: { password: hashedPassword },
+    });
+  }
+
+  generateAccessToken(sub: number, email: string) {
+    const token = this.jwtService.sign({
+      sub,
+      email,
+    });
+    return token;
   }
 }

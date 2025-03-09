@@ -11,57 +11,57 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  created_at DateTime @default(now())
 
   likes     Like[]
-  cateItems CartItem[]
+  cart_item CartItem[]
   orders    Order[]
 
   @@map("users")
 }
 
 model Book {
-  id         Int      @id @default(autoincrement())
-  title      String
-  img        Int
-  categoryId Int
-  format     String
-  isbn       Int
-  summary    String   @db.VarChar(255)
-  detail     String   @db.Text
-  author     String
-  pages      Int
-  contents   String
-  price      Int
-  pub_date   DateTime @default(now())
-  totalLikes Int
+  id          Int      @id @default(autoincrement())
+  title       String
+  img         Int
+  category_id Int
+  format      String
+  isbn        Int
+  summary     String   @db.VarChar(255)
+  detail      String   @db.Text
+  author      String
+  pages       Int
+  contents    String
+  price       Int
+  pub_date    DateTime @default(now())
+  likes       Int
 
-  likes        Like[]
-  cartItems    CartItem[]
-  orderedBooks OderedBook[]
-  orders       Order[]
+  total_likes   Like[]
+  cart_items    CartItem[]
+  ordered_books OrderedBook[]
+  orders        Order[]
 
-  categories Category @relation(fields: [categoryId], references: [id])
+  categories Category @relation(fields: [category_id], references: [category_id])
 
   @@map("books")
 }
 
 model Like {
-  userId      Int @id
-  likedBookId Int
+  user_id       Int @id
+  liked_book_id Int
 
-  users User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  books Book @relation(fields: [likedBookId], references: [id])
+  users User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  books Book @relation(fields: [liked_book_id], references: [id])
 
   @@map("likes")
 }
 
 model Category {
-  id           Int    @id @default(autoincrement())
-  categoryName String @unique
+  category_id   Int    @id @default(autoincrement())
+  category_name String @unique
 
   books Book[]
 
@@ -70,15 +70,15 @@ model Category {
 
 model CartItem {
   id       Int    @id @default(autoincrement())
-  bookId   Int
+  book_id  Int
   title    String
   summary  String
   quantity Int
   price    Int
-  userId   Int
+  user_id  Int
 
-  books Book @relation(fields: [bookId], references: [id])
-  users User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  books Book @relation(fields: [book_id], references: [id])
+  users User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("cart_iemts")
 }
@@ -94,32 +94,32 @@ model Delivery {
   @@map("deleveries")
 }
 
-model OderedBook {
+model OrderedBook {
   id       Int @id @default(autoincrement())
-  orderId  Int
-  bookId   Int
+  order_id Int
+  book_id  Int
   quantity Int
 
-  orders Order @relation(fields: [orderId], references: [id])
-  books  Book  @relation(fields: [bookId], references: [id])
+  orders Order @relation(fields: [order_id], references: [id])
+  books  Book  @relation(fields: [book_id], references: [id])
 
   @@map("order_books")
 }
 
 model Order {
-  id            Int      @id @default(autoincrement())
-  bookId        Int
-  totalQuantity Int
-  totalPrice    Int
-  userId        Int
-  deliveryId    Int
-  createdAt     DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  book_id        Int
+  total_quantity Int
+  total_price    Int
+  user_id        Int
+  delivery_id    Int
+  created_at     DateTime @default(now())
 
-  orderedBooks OderedBook[]
+  ordered_books OrderedBook[]
 
-  books      Book     @relation(fields: [bookId], references: [id])
-  users      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deliveries Delivery @relation(fields: [deliveryId], references: [id])
+  books      Book     @relation(fields: [book_id], references: [id])
+  users      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  deliveries Delivery @relation(fields: [delivery_id], references: [id])
 
   @@map("orders")
 }

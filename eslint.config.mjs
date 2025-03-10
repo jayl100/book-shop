@@ -3,59 +3,33 @@ import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import js from '@eslint/js';
 
-// module.exports = {
-//   parser: '@typescript-eslint/parser',
-//   parserOptions: {
-//     project: './tsconfig.json',
-//     tsconfigRootDir: __dirname,
-//     sourceType: 'module',
-//   },
-//   plugins: ['@typescript-eslint/eslint-plugin'],
-//   extends: [
-//     'plugin:@typescript-eslint/recommended',
-//     'plugin:prettier/recommended',
-//   ],
-//   root: true,
-//   env: {
-//     node: true,
-//     jest: true,
-//   },
-//   ignores: ['eslint.config.mjs'],
-//   rules: {
-//     '@typescript-eslint/no-explicit-any': 'off',
-//     '@typescript-eslint/no-floating-promises': 'warn',
-//     '@typescript-eslint/no-unsafe-argument': 'warn',
-//     'prettier/prettier': 'error',
-//   },
-// }
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: ['eslint.config.mjs', 'dist'],
   },
   eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  eslintPluginPrettierRecommended,
+  ...tseslint.configs.recommended,
   {
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
+      ecmaVersion: 2020,
       globals: {
         ...globals.node,
         ...globals.jest,
       },
-      ecmaVersion: 5,
-      sourceType: 'module',
       parserOptions: {
+        project: './tsconfig.json',
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
+        ecmaVersion: 2020,
       },
     },
-  },
-  {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
-      'prettier/prettier': 'error',
     },
   },
 );

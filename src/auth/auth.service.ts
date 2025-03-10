@@ -54,6 +54,14 @@ export class AuthService {
     const token = this.generateAccessToken(matchUser.id, email);
     console.log(token);
 
+    await this.prisma.token.create({
+      data: {
+        token,
+        expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000),
+        user_id: matchUser.id,
+      },
+    });
+
     return token;
   }
 

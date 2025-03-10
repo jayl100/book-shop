@@ -19,6 +19,7 @@ model User {
   likes     Like[]
   cart_item CartItem[]
   orders    Order[]
+  tokens    Token[]
 
   @@map("users")
 }
@@ -122,4 +123,16 @@ model Order {
   deliveries Delivery @relation(fields: [delivery_id], references: [id])
 
   @@map("orders")
+}
+
+model Token {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  expires_at DateTime
+  created_at DateTime @default(now())
+  user_id    Int
+
+  users User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("tokens")
 }

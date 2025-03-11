@@ -8,7 +8,7 @@ import {
 import { BookService } from './book.service';
 import { BookDto, GetBookQueryDto, Pagination } from './book.dto';
 
-@Controller('book')
+@Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
@@ -19,7 +19,7 @@ export class BookController {
     return await this.bookService.getAllBooks(query);
   }
 
-  @Get(':id')
+  @Get(':bookId')
   async getBookDetails(@Param('id') id: string): Promise<BookDto> {
     if (!id) {
       throw new NotFoundException('Not Found Page');

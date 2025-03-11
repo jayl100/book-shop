@@ -3,7 +3,7 @@ services:
     image: mysql:latest
     container_name: book-shop
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=bookshop1234
       - MYSQL_DATABASE=book-shop
@@ -19,7 +19,7 @@ services:
       - "3001:3001"
     environment:
       - PORT=3000
-      - DATABASE_URL=mysql://root:bookshop1234@localhost:3306/book-shop
+      - DATABASE_URL=mysql://root:bookshop1234@localhost:3307/book-shop
     depends_on:
       - mysql
     networks:

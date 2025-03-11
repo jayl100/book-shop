@@ -14,7 +14,7 @@ import { LikeService } from './like.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { Request, Response } from 'express';
 
-@Controller('like')
+@Controller('likes')
 export class LikeController {
   constructor(private readonly likeeService: LikeService) {}
 
@@ -26,11 +26,15 @@ export class LikeController {
     @Res() res: Response,
   ) {
     const userId = req.user as number;
-    await this.likeeService.addLike(userId, id);
+    if (!userId) {
+      throw new UnauthorizedException('unauthorized');
+    }
 
     if (!id) {
       throw new NotFoundException('Not found page');
     }
+
+    await this.likeeService.addLike(userId, id);
 
     return res.status(HttpStatus.CREATED).json({
       message: 'Like added successfully.',
@@ -45,11 +49,15 @@ export class LikeController {
     @Res() res: Response,
   ) {
     const userId = req.user as number;
-    await this.likeeService.removeLike(userId, id);
+    if (!userId) {
+      throw new UnauthorizedException('unauthorized');
+    }
 
     if (!id) {
       throw new NotFoundException('Not found page');
     }
+
+    await this.likeeService.removeLike(userId, id);
 
     return res.status(HttpStatus.CREATED).json({
       message: 'Like deleted successfully.',

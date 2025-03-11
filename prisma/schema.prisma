@@ -43,7 +43,6 @@ model Book {
   total_likes   Like[]
   cart_items    CartItem[]
   ordered_books OrderedBook[]
-  orders        Order[]
 
   categories Category @relation(fields: [category_id], references: [category_id])
 
@@ -109,7 +108,7 @@ model OrderedBook {
 
 model Order {
   id             Int      @id @default(autoincrement())
-  book_id        Int
+  book_title     String
   total_quantity Int
   total_price    Int
   user_id        Int
@@ -118,7 +117,6 @@ model Order {
 
   ordered_books OrderedBook[]
 
-  books      Book     @relation(fields: [book_id], references: [id])
   users      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   deliveries Delivery @relation(fields: [delivery_id], references: [id])
 

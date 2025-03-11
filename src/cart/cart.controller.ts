@@ -16,7 +16,7 @@ import { CartService } from './cart.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { Response, Request } from 'express';
 
-@Controller('cart')
+@Controller('carts')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

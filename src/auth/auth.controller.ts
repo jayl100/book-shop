@@ -23,7 +23,7 @@ export class AuthController {
     return this.authService.getAllUsers();
   }
 
-  @Post('signup')
+  @Post('join')
   async createUser(@Req() req: Request, @Res() res: Response) {
     const authDto = req.body as AuthDto;
     if (!authDto) {
